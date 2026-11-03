@@ -1,0 +1,91 @@
+{
+  "status": "EXECUTED_HCMC_RF_METHOD2_PILOT",
+  "source_notebook": "notebook50b59dca3c.ipynb (Berlin Phase 3 RF)",
+  "adaptation": "new RF trained on HCMC tabular observations; no pretrained Berlin weights",
+  "target": "reported upper depth endpoint in metres; not necessarily observed peak",
+  "features_main": [
+    "Year",
+    "Month",
+    "Location type",
+    "District mentioned",
+    "Province"
+  ],
+  "extra_retrospective_feature": "Cause",
+  "audit": {
+    "original_rows": 425,
+    "usable_upper_endpoint_rows": 147,
+    "excluded_rows": 278,
+    "exact_duplicate_rows_removed": 0,
+    "duplicate_obs_id_rows": 1,
+    "target_min_m": 0.1,
+    "target_max_m": 3.0,
+    "cause_counts": {
+      "High tide": 76,
+      "Rain": 54,
+      "Combined": 17
+    },
+    "sha256": "00c96766d0cc8f794ae518929eaf58763d1a36354b678dad6ea00cb7a9d68962"
+  },
+  "metrics": [
+    {
+      "protocol": "event_source",
+      "model": "mean_baseline",
+      "n": 147,
+      "n_folds": 5,
+      "mae_m": 0.26106270384772506,
+      "rmse_m": 0.4948039158540243,
+      "r2": -0.11086607898602074
+    },
+    {
+      "protocol": "event_source",
+      "model": "rf_context",
+      "n": 147,
+      "n_folds": 5,
+      "mae_m": 0.2892842025699168,
+      "rmse_m": 0.497594438087118,
+      "r2": -0.12343120857203727
+    },
+    {
+      "protocol": "event_source",
+      "model": "rf_context_and_known_cause",
+      "n": 147,
+      "n_folds": 5,
+      "mae_m": 0.3048241820537739,
+      "rmse_m": 0.5102035835154408,
+      "r2": -0.18108854887394488
+    },
+    {
+      "protocol": "location",
+      "model": "mean_baseline",
+      "n": 147,
+      "n_folds": 5,
+      "mae_m": 0.23414765442610477,
+      "rmse_m": 0.47139993683817955,
+      "r2": -0.008264530681846072
+    },
+    {
+      "protocol": "location",
+      "model": "rf_context",
+      "n": 147,
+      "n_folds": 5,
+      "mae_m": 0.09696373231832417,
+      "rmse_m": 0.2545893943956961,
+      "r2": 0.7059128385195318
+    },
+    {
+      "protocol": "location",
+      "model": "rf_context_and_known_cause",
+      "n": 147,
+      "n_folds": 5,
+      "mae_m": 0.09783746355685133,
+      "rmse_m": 0.2580860260378348,
+      "r2": 0.6977791445288247
+    }
+  ],
+  "versions": {
+    "python": "3.11.0",
+    "numpy": "2.4.6",
+    "pandas": "3.1.0",
+    "sklearn": "1.9.1"
+  }
+}

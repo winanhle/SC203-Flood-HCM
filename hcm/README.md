@@ -1,0 +1,45 @@
+# HCMC Method 2 — executed RF pilot
+
+Adapted from the supplied Berlin Phase 3 RF notebook: notebook50b59dca3c.ipynb.
+Executed locally, cell by cell in Python. Kaggle execution has not been performed in this run.
+
+## Run
+
+Open HCMC_Method2_RF.ipynb. On Kaggle, attach Flood_event_locations.tab or enable Internet for the public download. CPU is sufficient. Run all cells.
+
+## What changed
+
+- Replaced Berlin raster sampling with a reader for the unchanged HCMC table.
+- Retained RandomForestRegressor, 10 trees, seed 42. Fits new models on HCMC.
+- Features: year, month, location type, district, province; a separate variant adds known cause.
+- Excluded depth-derived labels, impacts, free text, IDs and source from predictors.
+- Target is the reported upper endpoint (cm / 100), not necessarily measured peak depth.
+- Missing targets are excluded. Source/date components and location groups are evaluated separately.
+- Compared against a training-mean dummy baseline on identical folds.
+
+## Results
+
+| Protocol | Model | n | MAE (m) | RMSE (m) | R2 |
+|---|---|---:|---:|---:|---:|
+| event_source | mean_baseline | 147 | 0.2611 | 0.4948 | -0.1109 |
+| event_source | rf_context | 147 | 0.2893 | 0.4976 | -0.1234 |
+| event_source | rf_context_and_known_cause | 147 | 0.3048 | 0.5102 | -0.1811 |
+| location | mean_baseline | 147 | 0.2341 | 0.4714 | -0.0083 |
+| location | rf_context | 147 | 0.0970 | 0.2546 | 0.7059 |
+| location | rf_context_and_known_cause | 147 | 0.0978 | 0.2581 | 0.6978 |
+
+## Limits
+
+This is a retrospective severity pilot among reported floods. It does not model flood occurrence or provide a physical rainfall forecast. The main feature set lacks Berlin-equivalent terrain and rainfall features. Adding reported Cause assumes it is known at prediction time. Grouped evaluation cannot remove newspaper selection bias or verify geocoding/event identities.
+The 147 available upper endpoints include four values of 3 m; these are retained as reported and can strongly affect errors. Missing endpoints are not zero. Different protocols can share either named locations or reporting events across folds, respectively. Scores do not establish transfer from Berlin and cannot be directly compared to Berlin model accuracy.
+
+## Supplied Berlin notebooks
+
+Phase 3 RF has real-data outputs (full-feature test R2 about 0.129). Phase 4 U-Net ran one epoch on eight real-data training patches; test R2 about -8.42. These are existing outputs in the supplied notebooks, not reruns during this task. The U-Net result demonstrates execution, not validated predictive quality.
+
+## Sources and license
+
+HCMC: Hardy, Sebastien; Radziute, Gintare (2026), Historical database of urban flooding in Ho Chi Minh City, Vietnam (2002–2026), DataSuds V1, https://doi.org/10.23708/8Y16HU . CC BY-NC 4.0: https://creativecommons.org/licenses/by-nc/4.0/ . Included Flood_event_locations.tab is unmodified; SHA256 is recorded in data_audit.json.
+Berlin code: https://github.com/omarseleem92/Machine_learning_for_urban_flooding . Paper: https://doi.org/10.5194/nhess-23-809-2023 .
+
+Generated adaptation and explanatory text were prepared with ChatGPT; metrics are from executed code, not invented.

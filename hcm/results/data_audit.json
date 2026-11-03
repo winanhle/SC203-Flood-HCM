@@ -1,0 +1,15 @@
+{
+  "original_rows": 425,
+  "usable_upper_endpoint_rows": 147,
+  "excluded_rows": 278,
+  "exact_duplicate_rows_removed": 0,
+  "duplicate_obs_id_rows": 1,
+  "target_min_m": 0.1,
+  "target_max_m": 3.0,
+  "cause_counts": {
+    "High tide": 76,
+    "Rain": 54,
+    "Combined": 17
+  },
+  "sha256": "00c96766d0cc8f794ae518929eaf58763d1a36354b678dad6ea00cb7a9d68962"
+}
