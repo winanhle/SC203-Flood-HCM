@@ -1,0 +1,4 @@
+hcm/data/cache/
+__pycache__/
+*.pyc
+tmp/

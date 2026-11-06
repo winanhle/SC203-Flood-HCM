@@ -9,21 +9,28 @@ Open HCMC_Method2_RF.ipynb. On Kaggle, attach Flood_event_locations.tab or enabl
 
 ## Added data for the next experiment
 
-Run `python prepare_hcm_data.py` to rebuild `data/flood_observations_enriched.csv` from the unchanged original table and the Open-Meteo ERA5 archive. The companion `data/era5_hcm_reference_daily.csv` stores the daily series; `data/enrichment_audit.json` records the exact request and response metadata.
+Run `python prepare_hcm_data.py` to rebuild `data/flood_observations_enriched.csv`. The pipeline uses the official published point layer rather than re-geocoding street names.
 
 | Coverage | Rows |
 |---|---:|
-| Original observations | 425 |
-| Numeric upper-depth target | 147 |
-| Known depth-class label | 168 |
-| Additional class-only observations | 21 |
-| Parseable observation date with ERA5 daily rain | 362 |
+| Official coordinates and elevation | 425 |
+| Valid water distance within published layer extent | 423 |
+| Exact date and site-grid IMERG rain | 362 |
+| Numeric target + site-grid rain | 123 |
+| Class target + site-grid rain | 139 |
+| Class target + spatial features (rain optional) | 168 |
 
-Added columns are `date_iso`, `water_height_max_m`, `depth_class_label`, `rain_era5_city_day_mm`, `rain_era5_city_prev3d_mm`, and `rain_reference`. The preceding-three-day rainfall excludes the observation day. Blank targets remain blank.
+Added physical columns include `latitude`, `longitude`, `elevation_copernicus_glo90_m`, `distance_to_water_m`, `rain_imerg_site_day_mm`, and antecedent 1/3/7-day rainfall. Antecedent sums exclude the observation day.
 
-Rain is from **one city-reference ERA5 grid point** at 10.7737261° N, 106.7166008° E, in the Asia/Bangkok daily time zone. It is a coarse exploratory weather covariate, not rainfall at each flood location. The source table has no latitude or longitude, so geocoding and site-specific rain, elevation, and river distance are still needed before testing H1. The existing pilot metrics below were not rerun with these new columns.
+Two Bà Rịa-Vũng Tàu points fall outside the published water layer bounding box; their water distances are intentionally missing and flagged `outside_water_layer_bbox`. One in-extent distance above 5 km is flagged `review_gt_5km` for sensitivity analysis.
 
-Weather source: [Open-Meteo Historical Weather API, ERA5 model](https://open-meteo.com/en/docs/historical-weather-api). Reference coordinate: [OpenStreetMap Nominatim city search](https://nominatim.openstreetmap.org/search?q=Ho+Chi+Minh+City%2C+Vietnam&format=jsonv2&limit=1). One observation has a parsed date whose year disagrees with the separate `Year` column; the table preserves both values for review.
+Rain is NASA GPM IMERG V07 `IMERG_PRECTOT`, requested through NASA POWER at each native 0.1-degree (about 10 km) cell represented by an observation. The 362 dated rows occupy 13 cells. IMERG daily values use UTC; because the source has dates but no event times, assignment near the 07:00 ICT UTC boundary is uncertain. Use same-day and antecedent features in sensitivity tests.
+
+Coordinates and the 2,430-feature river/canal/water-body layer come from the same [DataSuds flood dataset](https://doi.org/10.23708/8Y16HU). Elevation comes from Copernicus DEM GLO-90 (90 m) through the [Open-Meteo Elevation API](https://open-meteo.com/en/docs/elevation-api). Rain methodology is documented by [NASA POWER](https://power.larc.nasa.gov/docs/methodology/data/sources_meteorology/). GeoPackages are checksum-verified against DataSuds metadata.
+
+Optional: `python prepare_hcm_data.py --weather-source era5_land` requests per-site ERA5-Land instead. `--weather-source none` rebuilds only spatial features. API responses are cached locally but the cache is not versioned.
+
+`data/era5_hcm_reference_daily.csv` is retained as a legacy artifact from the earlier one-point experiment. It is not joined into the current enriched table and must not be used as the site-rainfall feature.
 
 ## What changed
 
@@ -58,7 +65,7 @@ The 147 available upper endpoints include four values of 3 m; these are retained
 
 ## Next experiment
 
-Geocode the observations, join daily rainfall, and derive elevation and distance to the nearest river or canal. Then compare rainfall-only, rainfall plus historical context, and rainfall plus historical and spatial predictors on the same grouped folds. A separate depth-class classifier could use observations without a numeric upper endpoint.
+Compare rainfall-only, rainfall plus historical context, and rainfall plus historical and spatial predictors on the same leakage-safe grouped folds. Run both regression (123 complete rain/target rows) and a separate depth-class classifier (139 complete rain/class rows; 168 rows for spatial-only classification). Do not infer event days from `Year`, and do not encode missing rainfall as zero.
 
 ## Supplied Berlin notebooks
 

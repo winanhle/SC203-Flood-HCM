@@ -4,24 +4,48 @@
   "known_depth_class_rows": 168,
   "class_only_extra_rows": 21,
   "rows_with_parseable_date": 362,
-  "rows_with_era5_daily_rain": 362,
-  "rows_with_era5_prev3d_rain": 362,
-  "date_year_disagrees_with_year_column": 1,
-  "reference_point_lat_lon": [
-    10.7737261,
-    106.7166008
-  ],
-  "reference_point_source": "https://nominatim.openstreetmap.org/search?q=Ho+Chi+Minh+City%2C+Vietnam&format=jsonv2&limit=1",
-  "rain_source_url": "https://archive-api.open-meteo.com/v1/archive?latitude=10.7737261&longitude=106.7166008&start_date=2002-10-05&end_date=2026-06-16&daily=precipitation_sum&models=era5&timezone=Asia%2FBangkok",
-  "rain_response_metadata": {
-    "latitude": 10.75,
-    "longitude": 106.75,
-    "timezone": "Asia/Bangkok",
-    "utc_offset_seconds": 25200,
-    "daily_units": {
-      "time": "iso8601",
-      "precipitation_sum": "mm"
-    }
+  "rows_with_official_coordinates": 425,
+  "rows_with_elevation": 425,
+  "rows_with_water_distance": 423,
+  "rows_outside_water_layer_bbox": 2,
+  "rows_with_water_distance_review_flag": 1,
+  "weather_source_selected": "imerg",
+  "rows_with_site_rain": 362,
+  "numeric_depth_rows_with_date_and_site_rain": 123,
+  "depth_class_rows_with_date_and_site_rain": 139,
+  "dataset_doi": "https://doi.org/10.23708/8Y16HU",
+  "point_layer": {
+    "dataverse_file_id": 50143,
+    "download_url": "https://dataverse.ird.fr/api/access/datafile/50143",
+    "md5": "1f618063abb8344471af01b3780c0519",
+    "crs": "EPSG:9210"
   },
-  "rain_limit": "Single city-reference ERA5 grid point, not observation-site rainfall; no location coordinates in source table."
+  "water_layer": {
+    "dataverse_file_id": 50145,
+    "download_url": "https://dataverse.ird.fr/api/access/datafile/50145",
+    "md5": "0590430eca0e97e1fe2ec6b7af3e2eb5",
+    "features": 2430
+  },
+  "elevation_source": {
+    "description": "Copernicus DEM GLO-90 (2021), 90 m, through Open-Meteo Elevation API",
+    "documentation": "https://open-meteo.com/en/docs/elevation-api",
+    "doi": "https://doi.org/10.5270/ESA-c5d3d65"
+  },
+  "rain_source": {
+    "description": "NASA POWER IMERG_PRECTOT V07, 0.1 degree (~10 km), UTC daily",
+    "api_endpoint": "https://power.larc.nasa.gov/api/temporal/daily/point",
+    "documentation": "https://power.larc.nasa.gov/docs/methodology/data/sources_meteorology/"
+  },
+  "rain_antecedent_definition": "prev1d/3d/7d exclude observation day",
+  "alignment_check": "425 rows matched on date and all 21 shared non-geometry attributes; OBJECTID used as unique join key because Obs_id has one duplicate",
+  "source_sha256": {
+    "HCMC_Floods_BDD.gpkg": "e0ea50ababae30cd93ac52fb3e42f0b28a8c8da946ed7129d263372883a698ee",
+    "HCMC_water.gpkg": "d51cb71b184405199358dd0f1d514519f4ceb2d0924a3f63b662dd586b95bba6"
+  },
+  "output_sha256": {
+    "flood_observations_enriched.csv": "559262380b7208db89ae5372d63b7c15ebf873c0177183becb76814259bca56a",
+    "spatial_features.csv": "16e1b32388183317fb008a1b9084d3e993229e342f9e88a06f33dc5f8c9d580f",
+    "imerg_site_event_rain.csv": "6d6ca6dca0ee60bde597b32b137a1a42ac5d8c7dee5c38c64854491b1ab437eb"
+  },
+  "license_note": "Dataset landing page states CC BY-NC 4.0 while deposited README states CC BY 4.0; apply CC BY-NC 4.0 conservatively pending clarification."
 }
