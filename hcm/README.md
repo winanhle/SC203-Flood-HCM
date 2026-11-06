@@ -1,4 +1,4 @@
-# HCMC Method 2 — executed RF pilot
+# HCMC flood-depth pilot — leakage-aware evaluation
 
 Adapted from the supplied Berlin Phase 3 RF notebook: notebook50b59dca3c.ipynb.
 Executed locally, cell by cell in Python. Kaggle execution has not been performed in this run.
@@ -14,24 +14,33 @@ Open HCMC_Method2_RF.ipynb. On Kaggle, attach Flood_event_locations.tab or enabl
 - Features: year, month, location type, district, province; a separate variant adds known cause.
 - Excluded depth-derived labels, impacts, free text, IDs and source from predictors.
 - Target is the reported upper endpoint (cm / 100), not necessarily measured peak depth.
-- Missing targets are excluded. Source/date components and location groups are evaluated separately.
+- Missing targets are excluded. Named location, source ID and parsed date are combined transitively into one group for evaluation.
 - Compared against a training-mean dummy baseline on identical folds.
 
 ## Results
 
-| Protocol | Model | n | MAE (m) | RMSE (m) | R2 |
+The table below is the current result to cite for this pilot. All models use the same five folds, with location, source and date links kept together. Lower MAE and RMSE are better; higher R² is better.
+
+| Model | Inputs | n | MAE (m) | RMSE (m) | R² |
 |---|---|---:|---:|---:|---:|
-| event_source | mean_baseline | 147 | 0.2611 | 0.4948 | -0.1109 |
-| event_source | rf_context | 147 | 0.2893 | 0.4976 | -0.1234 |
-| event_source | rf_context_and_known_cause | 147 | 0.3048 | 0.5102 | -0.1811 |
-| location | mean_baseline | 147 | 0.2341 | 0.4714 | -0.0083 |
-| location | rf_context | 147 | 0.0970 | 0.2546 | 0.7059 |
-| location | rf_context_and_known_cause | 147 | 0.0978 | 0.2581 | 0.6978 |
+| Mean baseline | Training-fold mean | 147 | **0.4266** | **0.5792** | **−0.5220** |
+| Random forest | Year, month, location type, district, province | 147 | 0.4546 | 0.6306 | −0.8044 |
+| Random forest + cause | Above plus reported cause | 147 | 0.4678 | 0.6284 | −0.7919 |
+
+Neither forest improves on the mean baseline. The earlier location-only R² of 0.7059 is superseded because its folds could share an event or source.
+
+## Group balance
+
+The transitive grouping creates 10 components. The largest holds 117 of 147 rows (79.6%), so the five test folds contain 117, 12, 9, 5 and 4 rows. These highly unequal folds make the pooled metrics sensitive to a single component. See `results/fold_metrics.csv` for each fold and `results/out_of_fold_predictions.csv` for row-level predictions.
 
 ## Limits
 
-This is a retrospective severity pilot among reported floods. It does not model flood occurrence or provide a physical rainfall forecast. The main feature set lacks Berlin-equivalent terrain and rainfall features. Adding reported Cause assumes it is known at prediction time. Grouped evaluation cannot remove newspaper selection bias or verify geocoding/event identities.
-The 147 available upper endpoints include four values of 3 m; these are retained as reported and can strongly affect errors. Missing endpoints are not zero. Different protocols can share either named locations or reporting events across folds, respectively. Scores do not establish transfer from Berlin and cannot be directly compared to Berlin model accuracy.
+This is a retrospective severity pilot among reported floods. It does not model flood occurrence or provide a physical rainfall forecast. The feature set has no rainfall, elevation or river-distance measurements, so it does not test the proposed H1 comparison. Adding reported Cause assumes it is known at prediction time. Grouped evaluation cannot remove newspaper selection bias or verify event identities.
+The 147 available upper endpoints include four values of 3 m; these are retained as reported and can strongly affect errors. Missing endpoints are not zero. Treat these scores as unstable pilot evidence. Scores do not establish transfer from Berlin and cannot be directly compared to Berlin model accuracy.
+
+## Next experiment
+
+Geocode the observations, join daily rainfall, and derive elevation and distance to the nearest river or canal. Then compare rainfall-only, rainfall plus historical context, and rainfall plus historical and spatial predictors on the same grouped folds. A separate depth-class classifier could use observations without a numeric upper endpoint.
 
 ## Supplied Berlin notebooks
 
