@@ -7,6 +7,24 @@ Executed locally, cell by cell in Python. Kaggle execution has not been performe
 
 Open HCMC_Method2_RF.ipynb. On Kaggle, attach Flood_event_locations.tab or enable Internet for the public download. CPU is sufficient. Run all cells.
 
+## Added data for the next experiment
+
+Run `python prepare_hcm_data.py` to rebuild `data/flood_observations_enriched.csv` from the unchanged original table and the Open-Meteo ERA5 archive. The companion `data/era5_hcm_reference_daily.csv` stores the daily series; `data/enrichment_audit.json` records the exact request and response metadata.
+
+| Coverage | Rows |
+|---|---:|
+| Original observations | 425 |
+| Numeric upper-depth target | 147 |
+| Known depth-class label | 168 |
+| Additional class-only observations | 21 |
+| Parseable observation date with ERA5 daily rain | 362 |
+
+Added columns are `date_iso`, `water_height_max_m`, `depth_class_label`, `rain_era5_city_day_mm`, `rain_era5_city_prev3d_mm`, and `rain_reference`. The preceding-three-day rainfall excludes the observation day. Blank targets remain blank.
+
+Rain is from **one city-reference ERA5 grid point** at 10.7737261° N, 106.7166008° E, in the Asia/Bangkok daily time zone. It is a coarse exploratory weather covariate, not rainfall at each flood location. The source table has no latitude or longitude, so geocoding and site-specific rain, elevation, and river distance are still needed before testing H1. The existing pilot metrics below were not rerun with these new columns.
+
+Weather source: [Open-Meteo Historical Weather API, ERA5 model](https://open-meteo.com/en/docs/historical-weather-api). Reference coordinate: [OpenStreetMap Nominatim city search](https://nominatim.openstreetmap.org/search?q=Ho+Chi+Minh+City%2C+Vietnam&format=jsonv2&limit=1). One observation has a parsed date whose year disagrees with the separate `Year` column; the table preserves both values for review.
+
 ## What changed
 
 - Replaced Berlin raster sampling with a reader for the unchanged HCMC table.

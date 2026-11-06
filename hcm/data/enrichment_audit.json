@@ -1,0 +1,27 @@
+{
+  "original_rows": 425,
+  "numeric_depth_rows": 147,
+  "known_depth_class_rows": 168,
+  "class_only_extra_rows": 21,
+  "rows_with_parseable_date": 362,
+  "rows_with_era5_daily_rain": 362,
+  "rows_with_era5_prev3d_rain": 362,
+  "date_year_disagrees_with_year_column": 1,
+  "reference_point_lat_lon": [
+    10.7737261,
+    106.7166008
+  ],
+  "reference_point_source": "https://nominatim.openstreetmap.org/search?q=Ho+Chi+Minh+City%2C+Vietnam&format=jsonv2&limit=1",
+  "rain_source_url": "https://archive-api.open-meteo.com/v1/archive?latitude=10.7737261&longitude=106.7166008&start_date=2002-10-05&end_date=2026-06-16&daily=precipitation_sum&models=era5&timezone=Asia%2FBangkok",
+  "rain_response_metadata": {
+    "latitude": 10.75,
+    "longitude": 106.75,
+    "timezone": "Asia/Bangkok",
+    "utc_offset_seconds": 25200,
+    "daily_units": {
+      "time": "iso8601",
+      "precipitation_sum": "mm"
+    }
+  },
+  "rain_limit": "Single city-reference ERA5 grid point, not observation-site rainfall; no location coordinates in source table."
+}
