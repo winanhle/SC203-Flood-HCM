@@ -49,7 +49,17 @@ Neither forest improves on the mean baseline. The earlier location-only R² of 0
 
 ## Group balance
 
-The transitive grouping creates 10 components. The largest holds 117 of 147 rows (79.6%), so the five test folds contain 117, 12, 9, 5 and 4 rows. These highly unequal folds make the pooled metrics sensitive to a single component. See `results/fold_metrics.csv` for each fold and `results/out_of_fold_predictions.csv` for row-level predictions.
+The transitive grouping creates 10 components. Sharing a date links observations from different locations, and a large flood report can therefore join many locations into one component. Location and source links can extend that component further. This explains why the largest component contains 117 of 147 rows (79.6%).
+
+| Test fold | Train rows | Test rows | Baseline MAE | RF MAE | RF + cause MAE | Baseline RMSE | RF RMSE | RF + cause RMSE |
+|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| 0 | 30 | 117 | 0.4039 | 0.4317 | 0.4285 | 0.4280 | 0.5107 | 0.4964 |
+| 1 | 135 | 12 | 0.2124 | 0.2758 | 0.4929 | 0.2194 | 0.2781 | 0.4954 |
+| 2 | 138 | 9 | 1.2103 | 1.1891 | 1.1689 | 1.7094 | 1.6956 | 1.6691 |
+| 3 | 142 | 5 | 0.1256 | 0.1500 | 0.1240 | 0.2249 | 0.2312 | 0.2253 |
+| 4 | 143 | 4 | 0.3482 | 0.3882 | 0.3938 | 0.4334 | 0.4667 | 0.4889 |
+
+Errors are in metres. The pooled MAE above weights rows, so fold 0 contributes 117/147 of its row-level errors; it is largely a reflection of that one component rather than a stable estimate across independent events. Fold 2 also has much higher error despite only nine test rows. Full-precision values are in `results/fold_metrics.csv`; row-level predictions are in `results/out_of_fold_predictions.csv`.
 
 ## Limits
 
